@@ -705,3 +705,147 @@ FROM OrderDetails
 GROUP BY OrderID 
 ORDER BY SUM(UnitPrice * Quantity) DESC
 LIMIT 1) AS ref));
+
+# The following exercise is about Sub-Queries and the 'Exist' Operator
+
+USE northwind;
+show tables;
+
+SELECT Exists(
+Select * From employees
+WHERE employeeID = 30) AS a;
+# we can use 'exists' to check whether the rows are in the system.
+
+SELECT EXISTS(
+SELECT * FROM employees
+WHERE employeeID = 99       # As we can see there's no record in the employee table with employeeID = 99
+) AS r;
+
+
+SELECT * FROM employees;
+SELECT * FROM orders;
+
+
+SELECT FirstName, LastName
+FROM Employees
+WHERE EXISTS(
+SELECT EmployeeID
+FROM 
+(SELECT EmployeeID, COUNT(EmployeeID) AS TopEmp
+FROM Orders
+WHERE employees.employeeID = orders.EmployeeID
+GROUP BY employeeID) AS sub
+WHERE TopEmp >100);
+
+SELECT SPACE(100);
+
+USE northwind;
+
+SELECT * FROM employees;
+SELECT CONCAT(FirstName,SPACE(1), LastName) AS'Name'
+FROM employees;
+
+SELECT * FROM customers;
+
+SELECT CustomerID, CompanyName, REPEAT('Good customer!!! ', 2) AS 'Praise'
+FROM Customers; 
+
+SELECT REPLACE(83432323, 3, 'A'); 
+
+SELECT REPLACE('I want a good job right now', 'o', '$') AS 'Quote';
+
+SELECT REPLACE('Thfre is a big cat', 'f', 'e');
+
+SELECT REPLACE('root_mean_square', 'root', 'random') AS 'Test2';
+
+
+SELECT * FROM employees;
+
+SELECT REPLACE(HireDate, '00:00:00', 'Time is missing') AS 'HireDateUpdate', EmployeeID, FirstName, LastName  
+FROM employees;
+
+SELECT REVERSE('Devil');
+
+SELECT * FROM employees;
+
+SELECT LEFT('Donatus', 3);
+
+SELECT * FROM employees;
+
+SELECT LEFT(LastName, 3) AS 'NameforShort', BirthDate
+FROM employees
+WHERE BirthDate > '1960-01-01 00:00:00';
+
+SELECT RIGHT('Canada', 4) AS 'CanShort';
+
+
+SELECT HomePhone 
+FROM Employees;
+
+
+
+SELECT SUBSTRING(HomePhone, LOCATE(' ', 'HomePhone')) AS 'Phone', 
+SUBSTRING(HomePhone, 1, LOCATE(' ', HomePhone)) AS 'RegionNumber'
+
+FROM Employees;
+
+SELECT FirstName, LastName, RIGHT(HomePhone, 8)
+FROM employees;
+
+SELECT RPAD('9', '3','11');
+
+SELECT RPAD(10, 4, 55);  -- RPAD means right padding.We are assigning the thrid variable to the right side of the first variable, and the second variable shows the total number of digits. 
+
+SELECT * FROM employees;
+
+SELECT FirstName, LastName, RPAD(Salary, (LENGTH(Salary) + LENGTH('USD ')), ' USD') AS 'Salary'
+FROM Employees;
+
+-- The 'Length()' function shows the total number of digits of the variable
+
+SELECT * FROM Products;
+
+SELECT ProductName, RPAD(UnitPrice, LENGTH(UnitPrice) + LENGTH(' USD') ,' USD') AS 'PriceUnit'
+FROM Products
+ORDER BY PriceUnit DESC;
+
+SELECT LPAD('456789', LENGTH('456789') + LENGTH('123'), '123') AS 'RESULT';
+
+SELECT LPAD('UY', LENGTH('UY') + LENGTH('B'), 'B') AS 'BUY';
+
+SELECT * FROM customers;
+
+SELECT LPAD(CompanyName, LENGTH(CompanyName) + LENGTH('Happy Customer '), 'Happy Customer ') AS'NEWCUSNAME'
+FROM Customers;
+
+
+SELECT LOCATE('c', 'America');     -- These functions returns the location of the first variable in the second variable
+SELECT LOCATE('rica', 'America');
+
+SELECT POSITION('rica' IN 'America');
+
+SELECT LastName FROM employees;
+
+SELECT LastName, POSITION('a' IN LastName)
+FROM Employees;
+
+
+SELECT SUBSTRING('forgone', POSITION('gone' IN 'forgone'), LENGTH('gone'));  -- The second variable means 'starting from this position'; the last variable means: the number of digits that we want to select.
+
+SELECT SUBSTRING('Abu_Wants_a_job', POSITION('job' IN 'Abu_Wants_a_job'), LENGTH('job'));
+
+
+SELECT * FROM orders;
+
+SELECT OrderID, CustomerID, CAST(RequiredDate AS DATE)
+FROM orders; -- That's one of the way to only show DATE part of the required data column
+
+SELECT OrderID, CustomerID, SUBSTRING(RequiredDate, 1, LENGTH(CAST(requiredDate AS DATE))) AS 'D'
+FROM orders;
+
+SELECT ProductName FROM Products;
+
+SELECT ProductName, SUBSTRING(ProductName, 4, LENGTH(ProductName)-2) AS 'SUB'
+FROM products;
+
+
